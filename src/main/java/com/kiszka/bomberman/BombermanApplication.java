@@ -9,7 +9,5 @@ public class BombermanApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BombermanApplication.class, args);
-		GameMap gameMap = new GameMap();
 	}
-
 }

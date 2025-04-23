@@ -2,6 +2,7 @@ package com.kiszka.bomberman.pojo;
 
 import lombok.AllArgsConstructor;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -11,7 +12,7 @@ import java.util.Random;
  * Assumption is made that there will always be 4 players for game to start
  * Each player will spawn in each corner of the map and each player will have random amount of free space in their neighbourhood amounting to at least 2 blocks in X and Y axis
  */
-public class GameMap {
+public class GameMap implements Serializable {
     private static final int BOARD_WIDTH = 900;
     private static final int BOARD_HEIGHT = 900;
     private static final int CELL_SIZE = 60;

@@ -3,12 +3,14 @@ package com.kiszka.bomberman.pojo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class GameState {
+public class GameState implements Serializable {
     private String gameId;
     private List<Player> players;
+    private GameMap gameMap;
 
 }
