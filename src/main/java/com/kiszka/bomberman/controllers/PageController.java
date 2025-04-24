@@ -17,7 +17,7 @@ public class PageController {
         return "mainPage";
     }
     @GetMapping("/game/{gameId}/{playerId}")
-    public String getGamePage(@PathVariable String gameId, String playerId, Model model){
+    public String getGamePage(@PathVariable String gameId, @PathVariable String playerId, Model model){
         model.addAttribute("gameState", gameStateRepository.findById(gameId));
         model.addAttribute("playerId",playerId);
         model.addAttribute("gameId",gameId);

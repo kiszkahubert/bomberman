@@ -21,7 +21,62 @@
     </script>
     <script>
         const canvas = document.getElementById('game');
+        canvas.focus();
         const ctx = canvas.getContext('2d');
+        const keysPressed = {};
+        window.addEventListener('keydown', (e)=>{
+            keysPressed[e.key] = true;
+            handleMovement();
+        })
+        window.addEventListener('keyup', (e)=>{
+            keysPressed[e.key] = false;
+        })
+        function handleMovement(){
+            const currentPlayer = gameState.players.find(p => p.id.toString() === playerId);
+            if(!currentPlayer) return;
+            let newX = currentPlayer.x;
+            let newY = currentPlayer.y;
+            console.log("Current position:", newX, newY);
+            const moveAmount = 60;
+            if(keysPressed['ArrowUp']) newY -= moveAmount;
+            if(keysPressed['ArrowDown']) newY += moveAmount;
+            if(keysPressed['ArrowLeft']) newX -= moveAmount;
+            if(keysPressed['ArrowRight']) newX += moveAmount;
+            if(newX !== currentPlayer.x || newY !== currentPlayer.y){
+                updateGameState(newX, newY)
+                // sendMoveToServer(newX,newY)
+            }
+        }
+        function updateGameState(x,y){
+            const currentPlayer = gameState.players.find(p => p.id.toString() === playerId);
+            if (currentPlayer) {
+                currentPlayer.x = x;
+                currentPlayer.y = y;
+                drawInitialBoard()
+            }
+        }
+        function sendMoveToServer(x,y){
+            //TODO implement this endpoint and optimize rendering
+            fetch(`/game/${gameId}/move`,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    playerId: playerId,
+                    x: x,
+                    y: y
+                })
+            }).then(response => response.json())
+                .then(updatedGameState => {
+                    gameState = updatedGameState;
+                    drawInitialBoard();
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+
         function drawPlayers(){
             ctx.fillStyle = 'pink';
             ctx.strokeStyle = 'yellow';

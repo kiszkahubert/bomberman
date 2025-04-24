@@ -73,7 +73,7 @@ public class GameMap implements Serializable {
                 isPlayerSpawn = true;
             }
             if(!isPlayerSpawn){
-                entry.setValue(rand.nextInt(10) < 7);
+                entry.setValue(rand.nextInt(10) < 9);
             }
         }
     }
