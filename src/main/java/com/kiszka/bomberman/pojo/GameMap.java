@@ -1,24 +1,29 @@
 package com.kiszka.bomberman.pojo;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Random;
 
 /**
  * Assumption is made that there will always be 4 players for game to start
  * Each player will spawn in each corner of the map and each player will have random amount of free space in their neighbourhood amounting to at least 2 blocks in X and Y axis
  */
+@Data
 public class GameMap implements Serializable {
     private static final int BOARD_WIDTH = 900;
     private static final int BOARD_HEIGHT = 900;
     private static final int CELL_SIZE = 60;
     private static final int INNER_GRID_OFFSET = 180;
     private static final int INNER_GRID_SPACING = 120;
-    private final Random rand = new Random();
+    @JsonIgnore
+    private final transient Random rand = new Random();
     /**
      * Map<Block, Boolean>
      * First param holds top left corner position of a block and second parameter holds the information if the block has been filled or not
@@ -71,27 +76,6 @@ public class GameMap implements Serializable {
                 entry.setValue(rand.nextInt(10) < 7);
             }
         }
-        for (Map.Entry<Block, Boolean> entry : gameMap.entrySet()) {
-            Block block = entry.getKey();
-            Boolean filled = entry.getValue();
-            System.out.println("Block at (" + block.x + ", " + block.y + ") - Filled: " + filled);
-        }
     }
-
-    @AllArgsConstructor
-    private static class Block{
-        int x;
-        int y;
-        @Override
-        public boolean equals(Object o) {
-            if (o == null || getClass() != o.getClass()) return false;
-            Block block = (Block) o;
-            return x == block.x && y == block.y;
-        }
-        @Override
-        public int hashCode() {
-            return Objects.hash(x, y);
-        }
-    }
-
 }
+
