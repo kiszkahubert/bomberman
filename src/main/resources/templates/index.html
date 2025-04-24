@@ -43,9 +43,30 @@
             if(keysPressed['ArrowLeft']) newX -= moveAmount;
             if(keysPressed['ArrowRight']) newX += moveAmount;
             if(newX !== currentPlayer.x || newY !== currentPlayer.y){
-                updateGameState(newX, newY)
+                if(!checkCollision(newX,newY)){
+                    updateGameState(newX, newY)
+                }
                 // sendMoveToServer(newX,newY)
             }
+        }
+
+        /**
+         *
+         * @param x new X position of player
+         * @param y new Y position of player
+         * @returns {boolean} False means there is no collision
+         */
+        function checkCollision(x,y){
+            var blocks = gameState.gameMap.gameMap;
+            for(const [key, value] of Object.entries(blocks)){
+                const [mapX,mapY] = key.split(',').map(Number);
+                if(x === mapX && y === mapY && !value){
+                    return false;
+                } else if(x === mapX && y === mapY){
+                    return true;
+                }
+            }
+            return true;
         }
         function updateGameState(x,y){
             const currentPlayer = gameState.players.find(p => p.id.toString() === playerId);
