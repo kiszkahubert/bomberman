@@ -45,8 +45,15 @@ public class GameMap implements Serializable {
             gameMap.put(new Block(BOARD_WIDTH-CELL_SIZE*2, CELL_SIZE+CELL_SIZE*i),false);
         }
         for(int i=0; i<6; i++){
-            for(int j=0; j<6; j++){
+            for(int j=0; j<5;j++){
                 int x = INNER_GRID_OFFSET + (INNER_GRID_SPACING*j);
+                int y = INNER_GRID_SPACING + (INNER_GRID_SPACING*i);
+                gameMap.put(new Block(x, y),false);
+            }
+        }
+        for(int i=0; i<5; i++){
+            for(int j=0; j<11; j++){
+                int x = INNER_GRID_SPACING + (60*j);
                 int y = INNER_GRID_OFFSET + (INNER_GRID_SPACING*i);
                 gameMap.put(new Block(x, y),false);
             }
@@ -73,7 +80,7 @@ public class GameMap implements Serializable {
                 isPlayerSpawn = true;
             }
             if(!isPlayerSpawn){
-                entry.setValue(rand.nextInt(10) < 9);
+                entry.setValue(rand.nextInt(10) < 7);
             }
         }
     }

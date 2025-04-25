@@ -76,27 +76,27 @@
                 drawInitialBoard()
             }
         }
-        function sendMoveToServer(x,y){
-            //TODO implement this endpoint and optimize rendering
-            fetch(`/game/${gameId}/move`,{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    playerId: playerId,
-                    x: x,
-                    y: y
-                })
-            }).then(response => response.json())
-                .then(updatedGameState => {
-                    gameState = updatedGameState;
-                    drawInitialBoard();
-                })
-                .catch(error => {
-                    console.error(error);
-                });
-        }
+        // function sendMoveToServer(x,y){
+        //     //TODO implement this endpoint and optimize rendering
+        //     fetch(`/game/${gameId}/move`,{
+        //         method: 'POST',
+        //         headers: {
+        //             'Content-Type': 'application/json',
+        //         },
+        //         body: JSON.stringify({
+        //             playerId: playerId,
+        //             x: x,
+        //             y: y
+        //         })
+        //     }).then(response => response.json())
+        //         .then(updatedGameState => {
+        //             gameState = updatedGameState;
+        //             drawInitialBoard();
+        //         })
+        //         .catch(error => {
+        //             console.error(error);
+        //         });
+        // }
 
         function drawPlayers(){
             ctx.fillStyle = 'pink';
