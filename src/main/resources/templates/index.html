@@ -9,12 +9,14 @@
             background-color: black;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1.6.1/dist/sockjs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 </head>
 <body>
     <canvas id="game" width="900" height="900"></canvas>
     <script th:inline="javascript">
         /*<![CDATA[*/
-        const gameState = /*[[${gameState}]]*/ null;
+        let gameState = /*[[${gameState}]]*/ null;
         const gameId = /*[[${gameId}]]*/ '';
         const playerId = /*[[${playerId}]]*/ '';
         /*]]>*/
@@ -24,6 +26,17 @@
         canvas.focus();
         const ctx = canvas.getContext('2d');
         const keysPressed = {};
+        const socket = new SockJS('/ws');
+        const stompClient = Stomp.over(socket);
+        stompClient.connect({}, function(frame){
+            console.log(frame);
+            stompClient.subscribe('/topic/game/'+gameId, function(message){
+                gameState = JSON.parse(message.body);
+                drawInitialBoard();
+            })
+        })
+
+
         window.addEventListener('keydown', (e)=>{
             keysPressed[e.key] = true;
             handleMovement();
@@ -44,6 +57,12 @@
             if(keysPressed['ArrowRight']) newX += moveAmount;
             if(newX !== currentPlayer.x || newY !== currentPlayer.y){
                 if(!checkCollision(newX,newY)){
+                    const move = {
+                        playerId: parseInt(playerId),
+                        x: newX,
+                        y: newY
+                    };
+                    stompClient.send("/app/game/"+gameId+"/move",{},JSON.stringify(move));
                     updateGameState(newX, newY)
                 }
                 // sendMoveToServer(newX,newY)
