@@ -35,8 +35,6 @@
                 drawInitialBoard();
             })
         })
-
-
         window.addEventListener('keydown', (e)=>{
             keysPressed[e.key] = true;
             handleMovement();
@@ -51,10 +49,19 @@
             let newY = currentPlayer.y;
             console.log("Current position:", newX, newY);
             const moveAmount = 60;
+            console.log(keysPressed)
             if(keysPressed['ArrowUp']) newY -= moveAmount;
             if(keysPressed['ArrowDown']) newY += moveAmount;
             if(keysPressed['ArrowLeft']) newX -= moveAmount;
             if(keysPressed['ArrowRight']) newX += moveAmount;
+            if(keysPressed[' ']) {
+                const bomb = {
+                    playerId: parseInt(playerId),
+                    x: newX,
+                    y: newY
+                };
+                stompClient.send("/app/game/"+gameId+"/placeBomb",{},JSON.stringify(bomb));
+            }
             if(newX !== currentPlayer.x || newY !== currentPlayer.y){
                 if(!checkCollision(newX,newY)){
                     const move = {
@@ -65,6 +72,17 @@
                     stompClient.send("/app/game/"+gameId+"/move",{},JSON.stringify(move));
                     updateGameState(newX, newY)
                 }
+            }
+        }
+        function drawBomb(){
+            const bombPos = gameState.bombs;
+            if(bombPos !== null){
+                bombPos.forEach(el => {
+                    ctx.fillStyle = 'red';
+                    ctx.strokeStyle = 'red';
+                    ctx.lineWidth = 2;
+                    drawBorderedRect(el.x,el.y)
+                })
             }
         }
 
@@ -149,6 +167,7 @@
         }
         function drawInitialBoard(){
             ctx.clearRect(0,0, canvas.width, canvas.height);
+            drawBomb()
             drawBorder()
             drawInnerSquares()
             drawPlayers()

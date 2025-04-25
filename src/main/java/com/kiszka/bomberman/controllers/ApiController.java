@@ -1,6 +1,7 @@
 package com.kiszka.bomberman.controllers;
 
 import com.kiszka.bomberman.GameStateRepository;
+import com.kiszka.bomberman.pojo.Bomb;
 import com.kiszka.bomberman.pojo.GameMap;
 import com.kiszka.bomberman.pojo.GameState;
 import com.kiszka.bomberman.pojo.Player;
@@ -29,7 +30,7 @@ public class ApiController {
         players.add(new Player(2,780,60,3,true));
         players.add(new Player(3,60,780,3,true));
         players.add(new Player(4,780,780,3,true));
-        GameState gameState = new GameState(gameId,players,gameMap);
+        GameState gameState = new GameState(gameId,players,gameMap, new ArrayList<>());
         gameStateRepository.save(gameState,2, TimeUnit.HOURS);
         return ResponseEntity.ok(gameState);
     }
