@@ -22,9 +22,6 @@ public class WebSocketController {
     }
     @MessageMapping("/game/{gameId}/move")
     public void handlePlayerMove(@DestinationVariable String gameId, @RequestBody PlayerMove move, Principal principal){
-//        if(!principal.getName().equals(move.getPlayerId())){
-//            return;
-//        }
         GameState gameState = gameStateRepository.findById(gameId);
         if(gameState == null){
             return;
@@ -33,7 +30,7 @@ public class WebSocketController {
                 .filter(p -> p.getId() == move.getPlayerId())
                 .findFirst()
                 .ifPresent(player -> {
-                    if(isValidMove(player,move,gameState)){
+                    if(!isValidMove(player,move,gameState)){
                         player.setX(move.getX());
                         player.setY(move.getY());
                         gameStateRepository.save(gameState,2, TimeUnit.HOURS);
