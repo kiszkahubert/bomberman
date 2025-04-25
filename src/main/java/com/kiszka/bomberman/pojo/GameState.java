@@ -15,4 +15,5 @@ public class GameState implements Serializable {
     private List<Player> players;
     private GameMap gameMap;
     private List<Bomb> bombs;
+    private List<Explosion> explosions;
 }

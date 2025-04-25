@@ -9,9 +9,8 @@ import java.io.Serializable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Bomb implements Serializable {
+public class Explosion implements Serializable {
     private int x;
     private int y;
-    private int ttl;
-    private int playerId;
+    private long endTime;
 }

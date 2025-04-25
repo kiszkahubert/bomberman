@@ -42,12 +42,13 @@
         window.addEventListener('keyup', (e)=>{
             keysPressed[e.key] = false;
         })
+        let lastInputTime = 0;
+        const inputDelay = 300;
         function handleMovement(){
             const currentPlayer = gameState.players.find(p => p.id.toString() === playerId);
             if(!currentPlayer) return;
             let newX = currentPlayer.x;
             let newY = currentPlayer.y;
-            console.log("Current position:", newX, newY);
             const moveAmount = 60;
             console.log(keysPressed)
             if(keysPressed['ArrowUp']) newY -= moveAmount;
@@ -61,6 +62,7 @@
                     y: newY
                 };
                 stompClient.send("/app/game/"+gameId+"/placeBomb",{},JSON.stringify(bomb));
+                return;
             }
             if(newX !== currentPlayer.x || newY !== currentPlayer.y){
                 if(!checkCollision(newX,newY)){
@@ -72,6 +74,17 @@
                     stompClient.send("/app/game/"+gameId+"/move",{},JSON.stringify(move));
                     updateGameState(newX, newY)
                 }
+            }
+        }
+        function drawExplosions(){
+            const explosionPos = gameState.explosions;
+            if(explosionPos != null){
+                ctx.fillStyle = 'red'
+                ctx.strokeStyle = 'red'
+                ctx.lineWidth = 2
+                gameState.explosions.forEach(el => {
+                    drawBorderedRect(el.x, el.y);
+                });
             }
         }
         function drawBomb(){
@@ -91,6 +104,7 @@
          * @param x new X position of player
          * @param y new Y position of player
          * @returns {boolean} False means there is no collision
+         *
          */
         function checkCollision(x,y){
             var blocks = gameState.gameMap.gameMap;
@@ -113,12 +127,9 @@
             }
         }
         function drawPlayers(){
-            ctx.fillStyle = 'pink';
-            ctx.strokeStyle = 'yellow';
-            ctx.lineWidth = 2;
             var players = gameState.players;
             players.forEach(el => {
-                drawBorderedRect(el.x,el.y)
+                drawBorderedRect(el.x,el.y,el.color)
             })
         }
         function drawBlocks(){
@@ -161,7 +172,9 @@
                 }
             }
         }
-        function drawBorderedRect(x, y) {
+        function drawBorderedRect(x, y,color) {
+            ctx.fillStyle = color;
+            ctx.lineWidth = 2;
             ctx.fillRect(x, y, 60, 60);
             ctx.strokeRect(x, y, 60, 60);
         }
@@ -172,6 +185,7 @@
             drawInnerSquares()
             drawPlayers()
             drawBlocks()
+            drawExplosions()
         }
         drawInitialBoard()
     </script>

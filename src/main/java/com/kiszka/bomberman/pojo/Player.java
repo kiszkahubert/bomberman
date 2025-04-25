@@ -16,4 +16,5 @@ public class Player implements Serializable {
     private int y;
     private int bombsLeft;
     private boolean isAlive;
+    private String color;
 }

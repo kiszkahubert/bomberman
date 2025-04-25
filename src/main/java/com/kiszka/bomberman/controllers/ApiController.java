@@ -26,11 +26,11 @@ public class ApiController {
         String gameId = UUID.randomUUID().toString();
         GameMap gameMap = new GameMap();
         List<Player> players = new ArrayList<>();
-        players.add(new Player(1,60,60,3,true));
-        players.add(new Player(2,780,60,3,true));
-        players.add(new Player(3,60,780,3,true));
-        players.add(new Player(4,780,780,3,true));
-        GameState gameState = new GameState(gameId,players,gameMap, new ArrayList<>());
+        players.add(new Player(1,60,60,3,true,"white"));
+        players.add(new Player(2,780,60,3,true,"pink"));
+        players.add(new Player(3,60,780,3,true,"green"));
+        players.add(new Player(4,780,780,3,true,"purple"));
+        GameState gameState = new GameState(gameId,players,gameMap, new ArrayList<>(),new ArrayList<>());
         gameStateRepository.save(gameState,2, TimeUnit.HOURS);
         return ResponseEntity.ok(gameState);
     }
