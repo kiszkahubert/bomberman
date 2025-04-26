@@ -31,7 +31,7 @@ public class WebSocketController {
                 .filter(p -> p.getId() == move.getPlayerId())
                 .findFirst()
                 .ifPresent(player -> {
-                    if(!isValidMove(player,move,gameState)){
+                    if(!isValidMove(player,move,gameState) && player.isAlive()){
                         player.setX(move.getX());
                         player.setY(move.getY());
                         gameStateRepository.save(gameState,2, TimeUnit.HOURS);
@@ -100,8 +100,14 @@ public class WebSocketController {
                         }
                     }
                 }
+                var players = gameState.getPlayers();
                 for(var exp : explosions){
                     gameState.getExplosions().add(exp);
+                    for(var p: players){
+                        if(p.getX() == exp.getX() && p.getY() == exp.getY()){
+                            p.setAlive(false);
+                        }
+                    }
                 }
                 gameStateRepository.save(gameState, 2, TimeUnit.HOURS);
                 messagingTemplate.convertAndSend("/topic/game/" + gameId, gameState);

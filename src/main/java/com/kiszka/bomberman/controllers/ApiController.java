@@ -1,7 +1,6 @@
 package com.kiszka.bomberman.controllers;
 
 import com.kiszka.bomberman.GameStateRepository;
-import com.kiszka.bomberman.pojo.Bomb;
 import com.kiszka.bomberman.pojo.GameMap;
 import com.kiszka.bomberman.pojo.GameState;
 import com.kiszka.bomberman.pojo.Player;

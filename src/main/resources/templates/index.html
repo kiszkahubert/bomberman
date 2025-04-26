@@ -42,11 +42,9 @@
         window.addEventListener('keyup', (e)=>{
             keysPressed[e.key] = false;
         })
-        let lastInputTime = 0;
-        const inputDelay = 300;
         function handleMovement(){
             const currentPlayer = gameState.players.find(p => p.id.toString() === playerId);
-            if(!currentPlayer) return;
+            if(!currentPlayer || !currentPlayer.alive) return;
             let newX = currentPlayer.x;
             let newY = currentPlayer.y;
             const moveAmount = 60;
@@ -127,9 +125,11 @@
             }
         }
         function drawPlayers(){
-            var players = gameState.players;
+            const players = gameState.players;
             players.forEach(el => {
-                drawBorderedRect(el.x,el.y,el.color)
+                if(el.alive){
+                    drawBorderedRect(el.x,el.y,el.color)
+                }
             })
         }
         function drawBlocks(){
@@ -178,6 +178,15 @@
             ctx.fillRect(x, y, 60, 60);
             ctx.strokeRect(x, y, 60, 60);
         }
+        function drawEndGame(){
+            ctx.font = '60px Arial';
+            ctx.textAlign = 'center';
+            ctx.lineWidth = 6;
+            ctx.fillStyle = 'black';
+            ctx.strokeText('GAME OVER', canvas.width/2, canvas.height/2);
+            ctx.fillStyle = 'white';
+            ctx.fillText('GAME OVER', canvas.width/2,canvas.height/2);
+        }
         function drawInitialBoard(){
             ctx.clearRect(0,0, canvas.width, canvas.height);
             drawBomb()
@@ -186,6 +195,10 @@
             drawPlayers()
             drawBlocks()
             drawExplosions()
+            const currentPlayer = gameState.players.find(p => p.id.toString() === playerId);
+            if (!currentPlayer || !currentPlayer.alive) {
+                drawEndGame();
+            }
         }
         drawInitialBoard()
     </script>
